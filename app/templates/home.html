@@ -1,0 +1,1141 @@
+<style>
+.hero-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  height: 1000px;
+}
+
+.hero-background {
+  position: absolute;
+  
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  transition: opacity 1.5s ease-in-out;
+  opacity: 0;
+  pointer-events: none;
+  filter: brightness(0.7) blur(4px);
+}
+
+.hero-background.current {
+  opacity: 1;
+  z-index: 2;
+  
+}
+
+.hero-background.next {
+  z-index: 3;
+ 
+}
+
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  
+}
+
+.hero-text-centered h1 {
+  font-size: 72px; /* або навіть 80px */
+  font-family: "Montserrat", sans-serif;
+  margin-bottom: 0.5rem;
+}
+
+.hero-card h1  {
+  font-size: 50px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 80;
+}
+
+.hero-card p  {
+  font-size: 25px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 50;
+}
+.hero-text-centered p {
+  font-size: 25px;
+  
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.btn-transparent {
+  background: white;
+  color: black;
+  font-weight: 500;
+  padding: 0.7rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: background 0.3s, color 0.3s;
+}
+
+.btn-transparent:hover {
+  background: #f2f2f2;
+  color: #222;
+}
+
+.hero-text {
+  color: white;
+}
+
+.btn-white {
+    font-family: "Montserrat", sans-serif;
+  background-color: white;
+  color: black;
+  font-weight: 500;
+  padding: 0.7rem 2.2rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  text-decoration: none;
+  border: none;
+  transition: background 0.3s ease, color 0.3s ease;
+  margin-top: 40px;
+}
+
+.btn-white:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+
+.btn-main {
+  padding: 0.6rem 2rem;
+  background-color: #6d8076;
+  color: white;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.btn-main:hover {
+  background-color: #4f5f58;
+}
+
+.bouquet-slider {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  gap: 1.5rem;
+}
+
+.bouquet-card {
+  flex: 0 0 calc(33.333% - 1rem);
+  background: white;
+  border-radius: 20px;
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.05);
+}
+
+.bouquet-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.bouquet-card img {
+  border-radius: 14px;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.bouquet-card:hover img {
+  transform: scale(1.03);
+}
+
+
+.slider-arrows {
+  position: relative;
+  width: 1400px;
+  max-width: 1500px;
+ 
+  height: 50px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  top: 250px;
+  z-index: 10;
+}
+.slider-wrapper {
+  max-width: 1200px;
+  margin: 2rem auto;
+  position: relative;
+  overflow: hidden;
+}
+.slider-wrapper {
+  position: relative;
+  max-width: 1200px;
+  margin: 2rem auto;
+  overflow: hidden;
+}
+
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  background: white;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 5;
+  transition: background 0.3s ease;
+}
+
+.slider-arrow.left {
+  left: -30px;
+}
+
+.slider-arrow.right {
+  right: -30px;
+}
+
+.slider-arrow:hover {
+  background: #f0f0f0;
+}
+
+
+.popular-header {
+  max-width: 1200px;
+  margin: 0 auto 2rem auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 1rem;
+}
+.bouquet-clean-card {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+  transition-delay: var(--delay, 0s);
+}
+
+.bouquet-clean-card.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.popular-header h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2e624d;
+  margin: 0;
+}
+.popular-header h2,
+.popular-header .btn-secondary {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.6s ease;
+}
+
+.popular-header.revealed h2,
+.popular-header.revealed .btn-secondary {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid #2e624d;
+  padding: 0.5rem 1.2rem;
+  color: #2e624d;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: #2e624d;
+  color: white;
+}
+
+
+.popular-section {
+  margin-top: 0px; /* або більше для більшого простору */
+}
+.btn-cart {
+  background-color: #f7f7f7;
+  color: #2e624d;
+  border: 2px solid #2e624d;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0.5rem 1.4rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.btn-cart:hover {
+  background-color: #2e624d;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.btn-cart:active {
+  transform: scale(0.97);
+}
+
+.light-card {
+  background-color: #5F5F5F;
+  color: #fff;
+}
+
+.dark-card {
+  background-color:  #222C26;
+  color: #fff;
+}
+
+.dark-card h3,
+.dark-card p {
+  color: #fff;
+}
+.about-elite-section {
+  background-color: #fcfaf8;
+  padding: 100px 20px;
+  font-family: 'Montserrat', sans-serif;
+  
+}
+
+.about-elite-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  justify-content: center;
+  position: relative;
+}
+
+.about-elite-image img {
+  width: 500px; 
+  height: 600;
+  object-fit: cover;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  position: relative;
+  z-index: 3;
+}
+
+.about-elite-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.about-elite-header img {
+  width: 340px;
+  height: auto;
+  margin-bottom: 12px;
+}
+
+.about-elite-header h2 {
+  font-size: 32px;
+  color: rgb(8, 0, 0);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.about-elite-text-wrapper {
+  position: relative;
+  flex: 1;
+  z-index: 2;
+}
+
+.about-elite-text {
+  position: relative;
+  padding: 0 20px;
+  background: transparent; /* Прибрано білий фон */
+}
+
+.about-elite-text h2 {
+    text-align: center;
+
+  font-size: 36px;
+  font-weight: 700;
+  color: #2e2e2e;
+  margin-bottom: 1rem;
+}
+
+.about-elite-text .intro {
+  font-size: 18px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.about-elite-text p {
+  font-size: 16px;
+  color: #444;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.about-elite-image,
+.about-elite-text-wrapper {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1s ease;
+}
+
+.about-elite-image.revealed,
+.about-elite-text-wrapper.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.store-image-block {
+  flex: 1 1 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.store-image-block img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.store-logo-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.store-logo-title img {
+  width: 270px;
+  height: 110px;
+}
+
+.store-logo-title h2 {
+  font-size: 28px;
+  color: #123b2d;
+  margin-top: 10px;
+  letter-spacing: 1px;
+}
+.store-left-decor {
+  position: absolute;
+  left: -60px;
+  top: 30px;
+  width: 100px;
+  z-index: 2;
+}
+
+.store-left-decor {
+  flex: 0 0 80px;
+  margin-right: 20px;
+  align-self: flex-start;
+}
+
+/* .popular-section {
+  background-color: #fcfaf8;
+  padding: 60px 0;
+}
+
+.popular-header h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  color: #2e624d;
+  margin: 0;
+  position: relative;
+  display: inline-block;
+}
+
+.popular-header h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background-color: #2e624d;
+  margin-top: 8px;
+}
+
+.bouquet-slider {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.bouquet-clean-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 1.2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+}
+
+.bouquet-clean-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.1);
+}
+
+
+.bouquet-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 360px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.bouquet-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  display: block;
+  border-radius: 16px;
+}
+
+.fav-btn {
+  position: absolute;
+  width: 40px;
+  top: 8px;
+  right: 8px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: background 0.2s ease;
+}
+
+.fav-btn:hover {
+  background: #f5f5f5;
+}
+
+.bouquet-clean-card h3 {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 14px;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bouquet-clean-card p {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2e624d;
+  margin-top: 4px;
+} */
+/* #dynamic-decor-container {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: -100;
+  z-index: 0;
+
+
+} */
+
+.bouquet-slider {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.bouquet-clean-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 1.2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.bouquet-clean-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.1);
+}
+
+.bouquet-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 360px;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.bouquet-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 16px;
+}
+
+.fav-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: background 0.2s ease;
+}
+
+.fav-btn:hover {
+  background: #f5f5f5;
+}
+
+.bouquet-clean-card h3 {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 14px;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bouquet-clean-card h3 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.bouquet-clean-card h3 a:hover {
+  text-decoration: underline;
+}
+
+.bouquet-clean-card p {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2e624d;
+  margin-top: 4px;
+}
+
+#decor-section-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+#dynamic-decor-container {
+  position: relative;
+  width: 100%;
+  z-index: 0;
+  left: -100;
+  pointer-events: none;
+}
+
+.decor {
+  display: block;
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+  width: 500px;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.team-section {
+  background-color: #fcfaf8;
+  padding: 80px 20px;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  height: 900px;
+}
+
+.team-header h2 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #2e624d;
+  margin-bottom: 0.5rem;
+}
+
+.team-header p {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 3rem;
+}
+
+.team-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.team-member {
+  width: 320px; /* було 280px */
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem; /* більше внутрішнього простору */
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
+}
+
+.team-member img {
+  width: 200px; /* було 180px */
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1.2rem;
+}
+
+.team-member h3 {
+  font-size: 22px;
+  font-weight: 1000;
+  margin-bottom: 0.5rem;
+  color: #1a1a1a;
+}
+
+.team-member p {
+  font-size: 17px;
+  color: #444;
+}
+.how-to-order {
+  position: relative;
+  background: #fcfaf8;
+  padding: 100px 20px;
+  font-family: 'Montserrat', sans-serif;
+  overflow: hidden;
+  height: 700px;
+}
+
+.order-title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  color: #1a3e33;
+  margin-bottom: 60px;
+}
+
+.order-columns {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 0;
+  position: relative;
+}
+
+.order-column {
+  flex: 1 1 33%;
+  padding: 0 30px;
+  text-align: center;
+}
+
+.order-column h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a3e33;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.order-column p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.order-column a {
+  color: #2e624d;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.order-column a:hover {
+  text-decoration: underline;
+}
+
+.order-divider {
+  width: 1px;
+  background-color: #ccc;
+  height: auto;
+  margin: 0 10px;
+}
+
+.order-leaf-left,
+.order-leaf-right {
+  position: absolute;
+  width: 120px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.order-leaf-left {
+  top: -10px;
+  left: 0;
+}
+
+.order-leaf-right {
+  bottom: -20px;
+  right: 0;
+  transform: rotate(180deg);
+}
+.order-column {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.7s ease;
+}
+
+.order-column.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.order-title {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.6s ease;
+}
+
+.order-title.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body {
+  position: relative;
+  z-index: 0;
+}
+
+
+</style>
+
+<script>
+    window.addEventListener("load", function () {
+      // ---- Фонове зображення
+      
+      const images = [
+        "{{ url_for('static', filename='images/фон8.jpg') }}",
+        "{{ url_for('static', filename='images/фон2.jpg') }}",
+        "{{ url_for('static', filename='images/фон6.jpg') }}"
+      ];
+    
+      let current = document.getElementById("bgCurrent");
+      let next = document.getElementById("bgNext");
+      let index = 0;
+    
+      current.style.backgroundImage = `url('${images[index]}')`;
+    
+      setInterval(() => {
+        const nextIndex = (index + 1) % images.length;
+        next.style.backgroundImage = `url('${images[nextIndex]}')`;
+        next.style.opacity = "1";
+        current.style.opacity = "0";
+    
+        setTimeout(() => {
+          let temp = current;
+          current = next;
+          next = temp;
+          index = nextIndex;
+        }, 1600);
+      }, 6000);
+    
+      // ---- Слайдер
+      const slider = document.getElementById('bouquetSlider');
+      const cards = slider.querySelectorAll('.bouquet-card');
+      const card = cards[0];
+      const cardStyle = window.getComputedStyle(card);
+      const gap = parseInt(cardStyle.marginRight || '24');
+      const cardWidth = card.offsetWidth + gap;
+    
+      const visibleCount = 3;
+      const total = cards.length;
+    
+      for (let i = 0; i < visibleCount; i++) {
+        const clone = cards[i].cloneNode(true);
+        slider.appendChild(clone);
+      }
+    
+      let currentIndex = 0;
+      let allowTransition = true;
+    
+      window.scrollSlider = function(direction) {
+        if (!allowTransition) return;
+    
+        const newIndex = currentIndex + direction;
+        slider.style.transition = 'transform 0.5s ease-in-out';
+        currentIndex = newIndex;
+        slider.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+    
+        allowTransition = false;
+    
+        setTimeout(() => {
+          allowTransition = true;
+          if (currentIndex >= total) {
+            slider.style.transition = 'none';
+            currentIndex = 0;
+            slider.style.transform = `translateX(0px)`;
+          }
+          if (currentIndex < 0) {
+            slider.style.transition = 'none';
+            currentIndex = total - 1;
+            slider.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+          }
+        }, 500);
+      };
+    });
+
+    // декор 
+    window.addEventListener("load", function () {
+    function addDecorations() {
+        const decorContainer = document.getElementById("dynamic-decor-container");
+        const sectionWrapper = document.getElementById("decor-section-wrapper");
+
+        if (!decorContainer || !sectionWrapper) return;
+
+        const pageHeight = sectionWrapper.scrollHeight;
+
+        const spacing = 900;
+        const count = Math.ceil(pageHeight / spacing);
+
+        decorContainer.querySelectorAll(".decor.auto").forEach(el => el.remove());
+
+        for (let i = 0; i < count; i++) {
+            const img = document.createElement("img");
+            img.classList.add("decor", "auto");
+            img.src = i % 2 === 0 ? "/static/images/decor1.png" : "/static/images/decor2.png";
+            img.alt = "decor";
+            img.style.position = "absolute";
+            img.style.zIndex = "-1";
+            img.style.pointerEvents = "none";
+            img.style.width = i % 2 === 0 ? "500px" : "400px";
+            img.style.top = `${i * spacing}px`;
+            img.style.left = i % 2 === 0 ? "-80px" : "auto";
+            img.style.right = i % 2 !== 0 ? "-235px" : "auto";
+            img.style.transform = 'rotate(35deg)';
+
+            decorContainer.appendChild(img);
+        }
+    }
+
+    // затримка для гарантії рендеру
+    setTimeout(addDecorations, 300);
+});
+
+window.addEventListener("scroll", function () {
+    const image = document.querySelector(".about-elite-image");
+    const text = document.querySelector(".about-elite-text-wrapper");
+    const revealPoint = window.innerHeight * 0.85;
+
+    if (image.getBoundingClientRect().top < revealPoint) {
+      image.classList.add("revealed");
+    }
+
+    if (text.getBoundingClientRect().top < revealPoint) {
+      text.classList.add("revealed");
+    }
+  });
+  window.addEventListener("scroll", function () {
+    const section = document.querySelector(".popular-section");
+    const header = section.querySelector(".popular-header");
+    const cards = section.querySelectorAll(".bouquet-clean-card");
+
+    const triggerPoint = window.innerHeight * 0.85;
+
+    if (section.getBoundingClientRect().top < triggerPoint) {
+      header.classList.add("revealed");
+
+      cards.forEach((card, i) => {
+        card.style.setProperty("--delay", `${i * 0.1}s`);
+        setTimeout(() => card.classList.add("revealed"), i * 100);
+      });
+    }
+  });
+  window.addEventListener("scroll", function () {
+    const section = document.querySelector(".team-section");
+    const members = section.querySelectorAll(".team-member");
+    const trigger = window.innerHeight * 0.85;
+
+    if (section.getBoundingClientRect().top < trigger) {
+      members.forEach((el, i) => {
+        setTimeout(() => el.classList.add("revealed"), i * 150);
+      });
+    }
+  });
+  window.addEventListener("scroll", function () {
+    const orderSection = document.querySelector(".how-to-order");
+    const title = orderSection.querySelector(".order-title");
+    const columns = orderSection.querySelectorAll(".order-column");
+
+    const trigger = window.innerHeight * 0.85;
+
+    if (orderSection.getBoundingClientRect().top < trigger) {
+      title.classList.add("revealed");
+      columns.forEach((col, i) => {
+        setTimeout(() => col.classList.add("revealed"), i * 200);
+      });
+    }
+  });
+    </script>
+    
+  
+  {% extends "base.html" %}
+
+{% block title %}Головна – Flower Tale{% endblock %}
+
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<!-- Головна секція без декору -->
+<section class="hero-section">
+  <div class="hero-background" id="heroBackground"></div>
+  <div class="hero-background current" id="bgCurrent"></div>
+  <div class="hero-background next" id="bgNext"></div>
+  <div class="hero-content">
+    <div class="hero-card">
+      <h1>Your bouquet speaks for you</h1>
+      <p>We create bouquets according to your wishes</p>
+      <a href="{{ url_for('category.category') }}" class="btn-white">Go to the directory</a>
+    </div>
+  </div>
+</section>
+
+<!-- ВСІ ІНШІ СЕКЦІЇ з декором -->
+<div id="decor-section-wrapper">
+  <div id="dynamic-decor-container" class="decor-wrapper"></div>
+
+  <section class="popular-section">
+    <div class="popular-header">
+      <h2>Популярні букети</h2>
+      <a href="{{ url_for('category.category') }}" class="btn-secondary">Більше букетів</a>
+    </div>
+
+    <div class="slider-wrapper">
+      <div class="bouquet-slider" id="bouquetSlider">
+        {% for bouquet in bouquets[:12] %}
+        <div class="bouquet-clean-card">
+          <div class="bouquet-img-wrapper">
+            <img src="{{ url_for('static', filename=bouquet.bouquet_image) }}" alt="{{ bouquet.bouquet_name }}">
+            <button class="fav-btn">♡</button>
+          </div>
+          <h3>{{ bouquet.bouquet_name }}</h3>
+          <p>{{ bouquet.bouquet_price }} грн</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="about-elite-section">
+    <div class="about-elite-header">
+      <img src="{{ url_for('static', filename='images/logo-in.png') }}" alt="Flower Tale логотип">
+      <h2>Flower Tale</h2>
+    </div>
+
+    <div class="about-elite-wrapper">
+      <div class="about-elite-container">
+        <div class="about-elite-image">
+          <img src="{{ url_for('static', filename='images/img055.png') }}" alt="Засновниця магазину">
+        </div>
+        <div class="about-elite-text-wrapper">
+          <div class="about-elite-text">
+            <h2>Про нас</h2>
+            <p class="intro">Я — Анна, засновниця Flower Tale</p>
+            <p>
+              Історія компанії почалася багато років тому, коли Анна ​​вирішила об'єднати свої зусилля і відкрити власний квітковий бізнес...
+            </p>
+            <p>
+              Анна почала з невеликого квіткового магазину в центрі міста. Іх продукція була унікальною і якісною, що притягнуло безліч клієнтів...
+            </p>
+          </div>
+          <div class="about-circle-bg"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="team-section">
+    <div class="team-header">
+      <h2>Наша команда</h2>
+      <p>Люди, які щодня створюють красу для вас</p>
+    </div>
+    <div class="team-container">
+      <div class="team-member">
+        <img src="{{ url_for('static', filename='images/team1.jpg') }}" alt="Анна – Флорист">
+        <h3>Анна</h3>
+        <p>Головний флорист</p>
+      </div>
+      <div class="team-member">
+        <img src="{{ url_for('static', filename='images/team2.jpg') }}" alt="Ірина – Дизайнер букетів">
+        <h3>Ірина</h3>
+        <p>Дизайнер букетів</p>
+      </div>
+      <div class="team-member">
+        <img src="{{ url_for('static', filename='images/team3.jpg') }}" alt="Марія – Менеджер замовлень">
+        <h3>Марія</h3>
+        <p>Менеджер замовлень</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-to-order">
+    <h2 class="order-title">Як зробити замовлення</h2>
+    <div class="order-columns">
+      <div class="order-column">
+        <h3>КАТАЛОГ</h3>
+        <p>
+          Вибираєте букет на сайті і ми зберемо один на один, або майже один на один з урахуванням сезонності квітки...
+        </p>
+        <a href="{{ url_for('category.category') }}">Дивитися каталог →</a>
+      </div>
+      <div class="order-divider"></div>
+      <div class="order-column">
+        <h3>ПО БАЖАННЮ</h3>
+        <p>
+          Наприклад, рожевий, без лілій та гвоздик на бюджет до 10 тисяч. Ми зберемо букет і надішлемо фото.
+        </p>
+        <a href="https://t.me/yourtelegram">Написати в Telegram →</a>
+      </div>
+      <div class="order-divider"></div>
+      <div class="order-column">
+        <h3>ПО ФОТО</h3>
+        <p>
+          Надсилаєте фото-референс і бюджет — зберемо схожий букет і погодимо з вами.
+        </p>
+        <a href="https://t.me/yourtelegram">Написати в Telegram →</a>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

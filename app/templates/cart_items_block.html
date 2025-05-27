@@ -1,0 +1,62 @@
+<div class="cart-left">
+  {% for item in cart_items %}
+    {% if item.is_custom %}
+      <!-- Кастомний букет -->
+      <div class="cart-product-card">
+        <div class="image">
+          <img src="{{ url_for('static', filename='images/constructor-placeholder.jpg') }}">
+        </div>
+        <div class="details">
+          <div class="top">
+            <h3>{{ item.custom_name or "Індивідуальний букет" }}</h3>
+            <button class="remove-btn" data-id="{{ loop.index0 }}" data-custom="true">✕</button>
+          </div>
+          <p class="desc-title">Склад</p>
+          <p class="desc">
+            {% for f in item.flowers %}
+              {{ f.flower_name }} × {{ f.quantity }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          </p>
+          <div class="quantity-line">
+          <button class="qty-btn minus"
+        data-id="{{ item.custom_id if item.is_custom else item.bouquet_id }}"
+        data-custom="{{ item.is_custom|lower }}">−</button>
+
+            <span class="quantity">{{ item.quantity }}</span>
+            <button class="qty-btn plus" data-id="{{ item.custom_id }}" data-custom="true">+</button>
+           
+            <span class="price">{{ item.total_price * item.quantity }} грн</span>
+          </div>
+
+        </div>
+      </div>
+    {% else %}
+      {% set bouquet = bouquet_map.get(item.bouquet_id) %}
+      {% if bouquet %}
+        <!-- Готовий букет -->
+        <div class="cart-product-card">
+          <div class="image">
+            <img src="{{ url_for('static', filename=bouquet.bouquet_image.lstrip('/')) }}">
+          </div>
+          <div class="details">
+            <div class="top">
+              <h3>{{ bouquet.bouquet_name }}</h3>
+              <button class="remove-btn" data-id="{{ item.bouquet_id }}">✕</button>
+            </div>
+            <p class="desc-title">Опис</p>
+            <p class="desc">{{ bouquet.bouquet_content or "Склад не вказано" }}</p>
+            <div class="quantity-line">
+             <button class="qty-btn minus"
+        data-id="{{ item.custom_id if item.is_custom else item.bouquet_id }}"
+        data-custom="{{ item.is_custom|lower }}">−</button>
+
+              <span class="quantity">{{ item.quantity }}</span>
+              <button class="qty-btn plus" data-id="{{ item.bouquet_id }}" data-custom="{{ item.is_custom|lower }}">+</button>
+              <span class="price">{{ bouquet.bouquet_price * item.quantity }} грн</span>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</div>

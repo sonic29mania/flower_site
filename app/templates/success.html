@@ -1,0 +1,225 @@
+<section class="order-success">
+  <!-- Декорації -->
+  <div class="decor decor-left">
+    <img src="{{ url_for('static', filename='images/decor1.png') }}" alt="Декор зліва">
+  </div>
+  <div class="decor decor-right">
+    <img src="{{ url_for('static', filename='images/decor2.png') }}" alt="Декор справа">
+  </div>
+
+  <div class="success-box">
+    <h1 class="success-title">Дякуємо за замовлення! 🌿</h1>
+
+    <div class="order-details">
+      <h2>Ваше замовлення №{{ order.order_id }}</h2>
+      <p><strong>Дата доставки:</strong> {{ order.delivery_date }}</p>
+      <p><strong>Час доставки:</strong> {{ order.delivery_time }}</p>
+      <p><strong>Тип доставки:</strong> {{ order.delivery_type }}</p>
+
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th>Назва</th>
+            <th>Ціна</th>
+            <th>Кількість</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in bouquets %}
+          <tr>
+            <td>{{ b.bouquet_name }}</td>
+            <td>{{ b.bouquet_price }} грн</td>
+            <td>{{ b.ordered_quantity }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="button-group">
+      <button type="button" class="btn" id="download-pdf-btn">⬇️ Завантажити чек (PDF)</button>
+      <button type="button" class="btn" id="send-pdf-btn">📧 Надіслати на пошту</button>
+      <a href="/" class="btn">⬅️ Повернутися на головну</a>
+    </div>
+
+    <div class="bonus-info">
+      <p>💰 Вам нараховано <strong>{{ earned_bonus }} бонусів</strong>.</p>
+      <p>🎉 Тепер на вашому рахунку <strong>{{ total_bonus }} бонусів</strong>.</p>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div id="pdf-toast" class="toast"></div>
+  <div id="email-toast" class="toast"></div>
+</section>
+
+<style>
+body {
+  overflow: hidden;
+}
+.order-success {
+  padding: 2rem;
+  font-family: 'Montserrat', sans-serif;
+  background: #eef6f0;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+.success-box {
+  max-width: 820px;
+  margin: auto;
+  background: #ffffff;
+  padding: 3rem 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 1;
+}
+.success-title {
+  text-align:center;
+  font-size: 32px;
+  color: #1b4d3e;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+.order-details h2 {
+  color:#2a7031;
+  font-size: 22px;
+}
+.order-details p {
+  margin: 0.5rem 0;
+}
+.order-table {
+  width:100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 2rem;
+  font-size: 15px;
+}
+.order-table th {
+  padding: 14px;
+  background:#e6f4ea;
+  border-bottom: 1px solid #cce3d8;
+  text-align: left;
+}
+.order-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #dbeade;
+}
+.button-group {
+  margin-top: 2.5rem;
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+.btn {
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #2f8a4d;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.3s ease;
+}
+.btn:hover {
+  background-color: #276f3e;
+}
+.bonus-info {
+  margin-top: 2.5rem;
+  font-size: 16px;
+  color: #265f42;
+  background-color: #ecf8f0;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+}
+.toast {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #4CAF50;
+  color: white;
+  padding: 1.25rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  font-family: 'Montserrat', sans-serif;
+  z-index: 9999;
+  font-size: 16px;
+  text-align: center;
+  max-width: 320px;
+  animation: fadeInOut 4s ease-in-out;
+}
+@keyframes fadeInOut {
+  0% {opacity: 0;}
+  10% {opacity: 1;}
+  90% {opacity: 1;}
+  100% {opacity: 0;}
+}
+.decor {
+  position: absolute;
+  width: 400px;
+  z-index: 0;
+}
+.decor-left {
+  left: -150px;
+  top: -150px;
+  display: flex;
+  flex-direction: column;
+  gap: 500px;
+  transform: rotate(32deg);
+}
+.decor-right {
+  right: -150px;
+  top: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 500px;
+}
+.decor-right img {
+  transform: rotate(50deg);
+}
+</style>
+
+
+<script>
+document.getElementById("send-pdf-btn").addEventListener("click", function () {
+    fetch("{{ url_for('send_receipt', order_id=order.order_id) }}", {
+        method: "POST"
+    })
+    .then(res => res.ok ? showToast("✅ Чек надіслано на пошту!", false) : showToast("❌ Помилка надсилання чеку!", true))
+    .catch(() => showToast("❌ Сталася помилка при запиті!", true));
+});
+
+document.getElementById("download-pdf-btn").addEventListener("click", function () {
+    fetch("{{ url_for('download_receipt', order_id=order.order_id) }}")
+        .then(response => {
+            if (!response.ok) throw new Error("Network error");
+            return response.blob();
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "receipt_{{ order.order_id }}.pdf";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            showToast("✅ PDF збережено", false);
+        })
+        .catch(() => showToast("❌ Помилка завантаження", true));
+});
+
+function showToast(message, isError = false) {
+    const toast = isError ? document.getElementById("email-toast") : document.getElementById("pdf-toast");
+    toast.textContent = message;
+    toast.style.backgroundColor = isError ? "#d9534f" : "#4CAF50";
+    toast.style.display = "block";
+    setTimeout(() => toast.style.display = "none", 4000);
+}
+</script>

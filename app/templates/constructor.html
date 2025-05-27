@@ -1,0 +1,774 @@
+{% extends "base.html" %}
+{% block title %}Збери свій букет | Flower Tale{% endblock %}
+{% block content %}
+
+<section class="constructor-section">
+  <h1 class="section-title">🌸 Збери свій унікальний букет</h1>
+
+<div class="constructor-wrapper">
+  <!-- Ліва частина: фільтри + квіти -->
+
+    <div class="flowers-section">
+      <h2>Квіти</h2>
+      <form method="get" id="constructor-filters">
+  <div class="filters-wrapper">
+    <!-- Колір -->
+    <div class="filter-dropdown">
+      <button type="button" class="filter-toggle">Колір</button>
+      <div class="filter-options">
+        {% for color in colors %}
+        <label>
+          <input type="checkbox" name="color" value="{{ color.color_id }}"
+                 {% if color.color_id in selected_color_ids %}checked{% endif %}>
+          {{ color.color_name }}
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Розмір -->
+    <div class="filter-dropdown">
+      <button type="button" class="filter-toggle">Розмір</button>
+      <div class="filter-options">
+        {% for size in sizes %}
+        <label>
+          <input type="checkbox" name="size" value="{{ size.size_id }}"
+                 {% if size.size_id in selected_size_ids %}checked{% endif %}>
+          {{ size.size_name }}
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Тип квітки -->
+    <div class="filter-dropdown">
+      <button type="button" class="filter-toggle">Тип квітки</button>
+      <div class="filter-options">
+        {% for t in types %}
+        <label>
+          <input type="checkbox" name="type" value="{{ t.type_f_id }}"
+                 {% if t.type_f_id in selected_type_ids %}checked{% endif %}>
+          {{ t.type_f_name }}
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Ціна -->
+    <div class="filter-dropdown">
+      <button type="button" class="filter-toggle">Ціна</button>
+      <div class="filter-options">
+        <label><input type="radio" name="price" value="asc" {% if selected_price_sort == 'asc' %}checked{% endif %}> Спочатку дешевші</label>
+        <label><input type="radio" name="price" value="desc" {% if selected_price_sort == 'desc' %}checked{% endif %}> Спочатку дорожчі</label>
+      </div>
+    </div>
+
+    
+  </div>
+</form>
+
+
+      <div class="flower-grid">
+        {% for flower in flowers %}
+        <div class="flower-card" data-id="{{ flower.flower_id }}" data-price="{{ flower.price_per_unit }}">
+         
+{% set image_path = flower.image if flower.image else 'Images/placeholder.jpg' %}
+<img src="{{ url_for('static', filename=image_path.lstrip('/')) }}" alt="{{ flower.name }}">
+
+
+            <h4>{{ flower.name }}</h4>
+          <p>{{ "%.2f"|format(flower.price_per_unit) }} грн / шт</p>
+            <div class="qty-controls">
+            <button class="minus">−</button>
+            <span class="qty">0</span>
+            <button class="plus">+</button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% set args = request.args.to_dict(flat=False) %}
+{% set _ = args.pop('page', None) %}
+
+     <div class="pagination-block">
+  {% if current_page > 1 %}
+    <a href="{{ url_for('constructor', page=current_page - 1, **args) }}" class="pagination-btn">← Назад</a>
+  {% endif %}
+
+  {% for page_num in range(1, total_pages + 1) %}
+    <a href="{{ url_for('constructor', page=page_num, **args) }}"
+       class="pagination-btn {% if current_page == page_num %}active{% endif %}">
+       {{ page_num }}
+    </a>
+  {% endfor %}
+
+  {% if current_page < total_pages %}
+    <a href="{{ url_for('constructor', page=current_page + 1, **args) }}" class="pagination-btn">Вперед →</a>
+  {% endif %}
+</div>
+
+  </div>
+
+
+      <!-- Блок для вибору стрічки і пакування -->
+<div class="right-side">
+  <div class="constructor-options green-theme">
+    <h2>Оберіть стрічку та пакування</h2>
+
+    <div class="select-with-image">
+      <img id="ribbon-image" src="{{ url_for('static', filename=(ribbons[0].image or 'Images/placeholder.jpg').replace('\\', '/').lstrip('/')) }}" alt="Стрічка" class="preview-img-side">
+      <div>
+        <label for="ribbon-select">Стрічка:</label>
+        <select id="ribbon-select" required>
+          {% for r in ribbons %}
+          <option value="{{ r.ribbon_id }}" data-price="{{ r.price_per_bouquet }}" data-image="{{ r.image }}">{{ r.color_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="select-with-image">
+      <img id="packaging-image" src="{{ url_for('static', filename=(packaging[0].image or 'Images/placeholder.jpg').replace('\\', '/').lstrip('/')) }}" alt="Пакування" class="preview-img-side">
+      <div>
+        <label for="packaging-select">Пакування:</label>
+        <select id="packaging-select" required>
+        {% for p in packaging %}
+            <option value="{{ p.packaging_id }}" data-price="{{ p.unit_price }}" data-image="{{ p.image }}"
+            {% if p.packaging_id == 0 %}selected{% endif %}>
+            {{ p.packaging_name }}
+            </option>
+        {% endfor %}
+        </select>
+
+      </div>
+    </div>
+    <div class="custom-name-block">
+    <label for="custom-name">Назва вашого букета (необов'язково):</label>
+    <input type="text" id="custom-name" placeholder="Наприклад: Мрія весни">
+    </div>
+
+    <div class="total-block">
+      <h3>💰 Загальна сума: <span id="total-price">0.00</span> грн</h3>
+      <button id="add-to-cart-btn" class="btn-to-cart">🌸 Створити букет</button>
+    </div>
+  </div>
+</div>
+
+
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<script>
+document.getElementById("packaging-select").addEventListener("change", function () {
+  const selected = this.options[this.selectedIndex];
+  const imgSrc = selected.dataset.image;
+  const packagingImg = document.getElementById("packaging-image");
+  if (selected.textContent.includes("Без пакування")) {
+    packagingImg.style.display = "none";
+  } else {
+    packagingImg.style.display = "block";
+    packagingImg.src = "/static/" + imgSrc.replace(/^\/+/, "");
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const flowerCards = document.querySelectorAll(".flower-card");
+  const totalEl = document.getElementById("total-price");
+  let selected = {};  // flower_id: qty
+
+  // Обробка кнопок +/- для кожної картки
+  flowerCards.forEach(card => {
+    const id = card.dataset.id;
+    const price = parseFloat(card.dataset.price);
+    const minusBtn = card.querySelector(".minus");
+    const plusBtn = card.querySelector(".plus");
+    const qtySpan = card.querySelector(".qty");
+
+    plusBtn.addEventListener("click", (e) => {
+      e.stopPropagation();  // ⛔ Не дозволяє події bubbling до всієї картки
+      selected[id] = (selected[id] || 0) + 1;
+      qtySpan.textContent = selected[id];
+      card.classList.add("selected");
+      recalculateTotal();
+    });
+
+    minusBtn.addEventListener("click", (e) => {
+      e.stopPropagation();  // ⛔ Не дозволяє події bubbling до всієї картки
+      if (selected[id]) {
+        selected[id] -= 1;
+        if (selected[id] === 0) {
+          delete selected[id];
+          card.classList.remove("selected");
+        }
+        qtySpan.textContent = selected[id] || 0;
+        recalculateTotal();
+      }
+    });
+  });
+
+  function recalculateTotal() {
+    let total = 0;
+    for (const id in selected) {
+      const card = document.querySelector(`.flower-card[data-id='${id}']`);
+      const price = parseFloat(card.dataset.price);
+      total += price * selected[id];
+    }
+
+    const ribbonPrice = parseFloat(document.querySelector("#ribbon-select option:checked")?.dataset.price || 0);
+    const packagingPrice = parseFloat(document.querySelector("#packaging-select option:checked")?.dataset.price || 0);
+    total += ribbonPrice + packagingPrice;
+
+    totalEl.textContent = total.toFixed(2);
+  }
+
+  document.getElementById("ribbon-select").addEventListener("change", recalculateTotal);
+  document.getElementById("packaging-select").addEventListener("change", recalculateTotal);
+
+ 
+document.getElementById("add-to-cart-btn").addEventListener("click", () => {
+  const flowers = [];
+  for (const id in selected) {
+    flowers.push({ flower_id: parseInt(id), quantity: selected[id] });
+  }
+
+  if (flowers.length === 0) {
+    alert("Будь ласка, оберіть хоча б одну квітку");
+    return;
+  }
+
+  const ribbonId = parseInt(document.getElementById("ribbon-select").value);
+  const packagingId = parseInt(document.getElementById("packaging-select").value);
+  const totalPrice = parseFloat(document.getElementById("total-price").textContent);
+  const customName = document.getElementById("custom-name").value;
+  fetch("/constructor/add_to_cart", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Requested-With": "XMLHttpRequest"
+    },
+   body: JSON.stringify({ 
+    flowers, 
+    ribbon_id: ribbonId, 
+    packaging_id: packagingId, 
+    total_price: totalPrice,
+    custom_name: customName
+    })
+        })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("Ваш букет додано до кошика ✅");
+
+      selected = {};  // ✅ очищення обраних квітів
+      location.href = "/cart";
+    } else {
+      alert("Помилка при додаванні ❌");
+    }
+  });
+});
+
+  // Розгортання фільтрів
+  document.querySelectorAll('.filter-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const parent = toggle.closest('.filter-dropdown');
+      parent.classList.toggle('open');
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('.filter-dropdown').forEach(dropdown => {
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('open');
+      }
+    });
+  });
+
+  // Автоматичне застосування фільтрів при зміні
+  const filterForm = document.getElementById("constructor-filters");
+  filterForm.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach(input => {
+    input.addEventListener("change", function () {
+      filterForm.submit();
+    });
+  });
+});
+function updatePreviewImage(selectId, imageId) {
+  const select = document.getElementById(selectId);
+  const image = document.getElementById(imageId);
+
+  const selectedOption = select.options[select.selectedIndex];
+  const imagePath = selectedOption.getAttribute("data-image");
+  if (imagePath) {
+    image.src = "/static/" + imagePath.replace(/^\/+/, "");
+  }
+}
+
+document.getElementById("ribbon-select").addEventListener("change", () => {
+  updatePreviewImage("ribbon-select", "ribbon-image");
+});
+
+document.getElementById("packaging-select").addEventListener("change", () => {
+  updatePreviewImage("packaging-select", "packaging-image");
+});
+
+</script>
+
+
+<style>
+.custom-name-block {
+  margin-top: 1rem;
+}
+.custom-name-block input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+    /* Зелена тема */
+.constructor-options.green-theme {
+  background: #f3fcf6;
+  border: 1px solid #c9e8d4;
+  box-shadow: 0 8px 24px rgba(46, 98, 77, 0.1);
+  width: 450px;
+}
+
+.constructor-options.green-theme h2 {
+  color: #2e624d;
+}
+
+.constructor-options.green-theme .total-block {
+  background: #d7f5e2;
+}
+
+.constructor-options.green-theme .total-block h3 {
+  color: #2e624d;
+}
+
+.constructor-options.green-theme label {
+  color: #145133;
+}
+
+.constructor-options.green-theme select {
+  border: 1px solid #b8dbca;
+  background-color: #ffffff;
+}
+
+/* Блок із картинкою збоку */
+.select-with-image {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.preview-img-side {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #bcd8c8;
+  background-color: #f0fdf4;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+    .select-with-image {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.preview-img-side {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #cccccc;
+  background-color: #f8f8f8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+    .preview-image-block {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.preview-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-height: 140px;
+  object-fit: contain;
+}
+
+.constructor-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+.constructor-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+/* Ліва частина з квітами */
+/* Ліва частина — фільтри + квіти */
+.left-side {
+  flex: 1;
+  max-width: 1000px;
+  margin: 0 auto;              /* 👉 центрує блок по горизонталі */
+  display: flex;
+  flex-direction: column;
+  align-items: center;         /* 👉 центрує вміст (включно з flower-grid) */
+}
+
+
+/* Права частина — стрічка і пакування */
+.right-side {
+  flex: 0 0 360px;
+  position: sticky;
+  top: 110px;
+}
+
+.constructor-options {
+  background: #fff8f9;
+  border: 1px solid #d0e5d8;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(72, 155, 86, 0.08);
+  text-align: left;
+  max-width: 100%;
+}
+
+.constructor-options h2 {
+  font-size: 22px;
+  color: #064d26;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.constructor-options label {
+  display: block;
+  margin: 0.8rem 0 0.4rem;
+  font-weight: 600;
+  color: #2c2c2c;
+}
+
+.constructor-options select {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: "Montserrat", sans-serif;
+  background: #fff;
+  margin-bottom: 1rem;
+}
+
+.total-block {
+  background: #e9fcef;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.total-block h3 {
+  font-size: 18px;
+  color: #064d26;
+  margin-bottom: 1rem;
+}
+
+.btn-to-cart {
+  background-color: #064d26;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-family: "Montserrat", sans-serif;
+}
+
+.btn-to-cart:hover {
+  background-color: #064d26;
+}
+
+
+.btn-to-cart {
+  background-color: #064d26;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-family: "Montserrat", sans-serif;
+}
+
+.btn-to-cart:hover {
+  background-color: #064d26;
+}
+
+
+    .pagination-block {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.pagination-btn {
+  display: inline-block;
+  margin: 0 0.4rem;
+  padding: 0.5rem 1rem;
+  background-color: #f2f2f2;
+  color: #333;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.pagination-btn:hover {
+  background-color: #ddd;
+}
+
+.pagination-btn.active {
+  background-color: #2e624d;
+  color: white;
+  font-weight: bold;
+}
+
+    .btn-holder {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.load-more {
+  background-color: transparent;
+  border: 2px solid #2e624d;
+  color: #2e624d;
+  padding: 0.6rem 1.5rem;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: "Montserrat", sans-serif;
+}
+
+.load-more:hover {
+  background-color: #2e624d;
+  color: white;
+}
+
+.flower-card.selected {
+  border: 2px solid #2e624d;
+  box-shadow: 0 0 10px rgba(46, 98, 77, 0.3);
+}
+
+.constructor-options {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.constructor-options label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.constructor-options select {
+  padding: 0.5rem;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+}
+
+.total-block h3 {
+  font-size: 20px;
+  margin-top: 1rem;
+}
+
+.total-block {
+  margin-top: 1rem;
+}
+
+    .filters-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 2rem 0 3rem;
+  justify-content: center;
+}
+
+.filter-dropdown {
+  position: relative;
+  min-width: 180px;
+}
+
+.filter-toggle {
+  background-color: #fff;
+  color: #2c3e50;
+  border: 1px solid #2c3e50;
+  padding: 0.5rem 1.5rem 0.5rem 1rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+  position: relative;
+  text-align: left;
+  width: 100%;
+}
+
+.filter-toggle::after {
+  content: '▼';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  pointer-events: none;
+  color: #2c3e50;
+}
+
+.filter-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+}
+
+.filter-dropdown.open .filter-options {
+  display: block;
+}
+
+.filter-options label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.btn-to-cart {
+  background-color: #2e624d;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-family: "Montserrat", sans-serif;
+}
+
+.btn-to-cart:hover {
+  background-color: #244f3f;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  padding-top: 100px; /* відступ від хедера */
+  background-color: #fdfdfd;
+}
+
+.constructor-section {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+.flower-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  min-height: 600px; /* 💡 додає висоту навіть якщо 1 квітка */
+}
+
+.flower-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 1.2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  max-width: 360px;        /* 💡 обмеження ширини */
+  margin: 0 auto;          /* 💡 центрує картку, якщо вона одна */
+}
+
+
+.flower-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.1);
+}
+
+.flower-card img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.flower-card h4 {
+  font-size: 18px;
+  margin-top: 14px;
+  color: #1a1a1a;
+}
+
+.flower-card p {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2e624d;
+  margin-top: 4px;
+}
+
+.qty-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.qty-controls button {
+  background: #e0f2f1;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  font-size: 18px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+</style>
+
+{% endblock %}

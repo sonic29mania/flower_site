@@ -1,0 +1,165 @@
+<style>
+    .contacts-section {
+  padding: 60px 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 32px;
+  color: #00312E;
+  margin: 50px;
+}
+
+.contacts-flex {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.contacts-left, .contacts-right {
+  flex: 1 1 45%;
+  min-width: 300px;
+}
+
+.sub-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #00312E;
+  border-bottom: 2px solid #00312E;
+  padding-bottom: 5px;
+}
+
+.contact-phones {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.contact-phones li {
+  margin-bottom: 10px;
+}
+
+.contact-phones a {
+  color: #00312E;
+  text-decoration: underline;
+}
+
+.question-text {
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+.schedule-text {
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+.contact-form-wrapper {
+  margin-top: 60px;
+  text-align: center;
+}
+
+.form-title {
+  font-size: 24px;
+  margin-bottom: 30px;
+  color: #00312E;
+}
+
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.contact-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.contact-form button {
+  background-color: #00312E;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.contact-form button:hover {
+  background-color: #025b50;
+}
+
+/* 📱 Адаптивність */
+@media (max-width: 768px) {
+  .contacts-flex {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+</style>
+
+{% extends "base.html" %}
+
+{% block title %}Контакти | Flower Tale{% endblock %}
+
+{% block content %}
+<section class="contacts-section">
+  <div class="container">
+
+    <h1 class="page-title">Контакти</h1>
+
+    <div class="contacts-flex">
+      <!-- Ліва колонка -->
+      <div class="contacts-left">
+        <h2 class="sub-title">Наші контактні телефони</h2>
+        <ul class="contact-phones">
+          <li><a href="tel:0939299322">(093) 929-93-22</a>, <a href="tel:0636000794">(063) 600-07-94</a> магазин Flower Tale</li>
+          <li><a href="tel:0634188490">(063) 418-84-90</a> ведучий флорист Анастасія</li>
+          <li><a href="tel:0939096502">(093) 909-65-02</a> керівник Оксана Анатоліївна</li>
+        </ul>
+
+        <p class="question-text">Є питання чи побажання щодо нашої роботи?</p>
+        <p class="question-text">Ви можете написати нам, заповнивши форму нижче, і ми обов'язково зв'яжемося з вами!</p>
+      </div>
+
+      <!-- Права колонка -->
+      <div class="contacts-right">
+        <h2 class="sub-title">Режим роботи</h2>
+        <p class="schedule-text">Букети та обробка замовлень – щодня з <b>08:00 до 20:00</b>, без перерви.</p>
+        <p class="schedule-text">Кур'єрська доставка щодня з <b>09:00 до 22:00</b> (<b>07:00 - 09:00</b> – Доставка лише за домовленістю).</p>
+      </div>
+    </div>
+
+    <!-- Форма -->
+    <div class="contact-form-wrapper">
+      <h2 class="form-title">Написати нам</h2>
+      <form class="contact-form">
+        <input type="text" name="name" placeholder="Ваше ім'я">
+        <input type="email" name="email" placeholder="Email">
+        <textarea name="message" placeholder="Ваше повідомлення"></textarea>
+        <button type="submit">Відправити</button>
+      </form>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,739 @@
+<style>
+    /* Основна структура */
+    main#main {
+      padding-top: 120px;
+    }
+    
+    .cart-page {
+      padding: 2rem;
+      max-width: 1440px;
+      margin: 0 auto;
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    .cart-title {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      color: #004d40;
+    }
+    
+    .cart-layout {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .cart-left {
+      flex: 2;
+      min-width: 300px;
+    }
+    
+    .cart-right {
+      flex: 1;
+      min-width: 600px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    }
+    
+    /* Товар */
+    .cart-product-card {
+      display: flex;
+      gap: 1.5rem;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      background-color: #fff;
+    }
+    
+    .cart-product-card .image img {
+      width: 110px;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    
+    .cart-product-card .details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .cart-product-card .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .cart-product-card h3 {
+      font-size: 21px;
+      margin: 0;
+      font-weight: 600;
+    }
+    
+    .remove-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #004d40;
+      cursor: pointer;
+    }
+    
+    .desc-title {
+      font-size: 18px;
+      margin: 0.5rem 0 0.25rem;
+      font-weight: 600;
+    }
+    
+    .desc {
+      font-size: 18px;
+      color: #444;
+    }
+    
+    .quantity-line {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .qty-btn {
+      background: #e0f2f1;
+      border: none;
+      width: 32px;
+      height: 32px;
+      font-size: 1.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .quantity {
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    
+    .price {
+      margin-left: auto;
+      font-weight: 600;
+      color: #004d40;
+    }
+    
+    /* Підсумок */
+    .checkout-summary h2 {
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+      color: #004d40;
+    }
+    
+    .checkout-summary table {
+      width: 100%;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .checkout-summary td {
+      padding: 0.5rem 0;
+    }
+    
+    .checkout-summary .summary-total {
+      font-weight: bold;
+      border-top: 1px solid #aaa;
+      padding-top: 1rem;
+    }
+    
+    /* Форма */
+    .checkout-form-container {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      font-family: 'Montserrat', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .checkout-form-container h2 {
+      font-size: 1.8rem;
+      text-align: center;
+      color: #004d40;
+      margin-bottom: 1.5rem;
+    }
+    
+    .checkout-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem 2rem;
+    }
+    
+    .checkout-form input,
+    .checkout-form select,
+    .checkout-form textarea {
+      padding: 0.75rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 1rem;
+      background: #f5f5f5;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .checkout-form textarea {
+      resize: vertical;
+      min-height: 100px;
+      grid-column: span 2;
+    }
+    
+    .checkout-form .submit-btn {
+      grid-column: span 2;
+      background-color: #004d40;
+      color: #fff;
+      border: none;
+      padding: 1rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .checkout-form .submit-btn:hover {
+      background-color: #00332d;
+    }
+    
+    #delivery-details {
+      grid-column: span 2;
+      padding: 1rem;
+      background-color: #e0f2f1;
+      border: 1px dashed #80cbc4;
+      border-radius: 10px;
+    }
+    
+    .auth-warning {
+      background: #e8f5e9;
+      border: 1px solid #a5d6a7;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+    }
+    
+    .auth-warning a {
+      color: #004d40;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+    #delivery-details {
+  display: none;
+  grid-column: span 2;
+  padding: 1rem;
+  background-color: #e0f2f1;
+  border: 1px dashed #80cbc4;
+  border-radius: 10px;
+}
+.delivery-info-text {
+  font-size: 0.95rem;
+  padding: 1rem;
+  background-color: #f1f8e9;
+  border-left: 5px solid #aed581;
+  border-radius: 8px;
+  color: #33691e;
+}
+.delivery-info-text strong {
+  color: #1b5e20;
+}
+.decor {
+  position: absolute;
+  width: 400px;
+  z-index: 0;
+}
+.decor-left {
+  left: -150px;
+  top: -150px;
+  display: flex;
+  flex-direction: column;
+  gap: 500px;
+  transform: rotate(32deg);
+}
+.decor-right {
+  right: -150px;
+  top: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 500px;
+}
+.decor-right img {
+  transform: rotate(50deg);
+}
+body {
+  overflow: hidden;
+}
+ .cart-product-card .image img {
+    transition: transform 0.3s ease;
+  }
+  .cart-product-card .image img:hover {
+    transform: scale(1.05);
+  }
+.error-message {
+  color: #c62828;
+  font-size: 0.9rem;
+  margin-top: 2px;
+  display: block;
+}
+input.invalid, select.invalid {
+  border: 1px solid #c62828;
+  background-color: #ffebee;
+}
+  .form-group { position: relative; margin-bottom: 1.5rem; }
+  .error-message {
+    display: none;
+    font-size: 0.8rem;
+    color: #c62828;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  .form-group.invalid input,
+  .form-group.invalid select {
+    border: 1px solid #c62828;
+    background-color: #fff5f5;
+  }
+
+  .form-group { position: relative; margin-bottom: 1.5rem; }
+  .error-message {
+    display: none;
+    font-size: 0.8rem;
+    color: #c62828;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  .form-group.invalid input,
+  .form-group.invalid select {
+    border: 1px solid #c62828;
+    background-color: #fff5f5;
+  }
+
+.input-error {
+  border: 2px solid #c62828 !important;
+  background-color: #ffebee;
+}
+.error-banner {
+  
+  background-color: #ffefef;
+  color: #c62828;
+  padding: 10px 20px;
+  border: 1px solid #c62828;
+  border-radius: 6px;
+  margin-top: 12px;
+  text-align: center;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 700;
+  
+}
+    </style>
+{% block content %} 
+<!-- Декорації -->
+<div class="decor decor-left">
+  <img src="{{ url_for('static', filename='images/decor1.png') }}" alt="Декор зліва">
+</div>
+<div class="decor decor-right">
+  <img src="{{ url_for('static', filename='images/decor2.png') }}" alt="Декор справа">
+</div>
+<section class="cart-page">
+  <h1 class="cart-title">Оформлення замовлення</h1>
+  <div class="cart-layout">
+    <!-- Ліва колонка -->
+    <div class="cart-left" id="cart-items-wrapper">
+      {% include "cart_items_block.html" %}
+    </div>
+
+    <!-- Права колонка -->
+    <div class="cart-right">
+      <div class="checkout-form-container">
+        <h2>Інформація про замовлення</h2>
+        <form method="POST" action="{{ url_for('checkout.checkout') }}" class="checkout-form" id="order-form">
+
+          <input type="text" name="name" placeholder="Ім’я *" value="{{ user.customer_name if user else '' }}" required>
+        <input type="text" name="surname" placeholder="Прізвище *" value="{{ user.customer_surname if user else '' }}" required>
+        <input type="tel" name="phone" placeholder="Телефон *" value="{{ user.customer_phone if user else '' }}" required>
+
+
+          <select name="delivery_type" id="delivery-type" required>
+            <option value="">Спосіб доставки *</option>
+            <option value="Самовивіз" {% if user and user.delivery_type == "Самовивіз" %}selected{% endif %}>Самовивіз</option>
+            <option value="Курєр" {% if user and user.delivery_type == "Курєр" %}selected{% endif %}>Кур’єр</option>
+          </select>
+
+          <div id="delivery-details">
+            <select name="area">
+              <option value="">Район *</option>
+              {% set areas = ["Індустріальний", "Київський", "Немишлянський", "Новобаварський", "Основ'янський", "Салтівський", "Слобідський", "Холодногірський", "Шевченковський"] %}
+              {% for area in areas %}
+                <option value="{{ area }}" {% if user and user.customer_area == area %}selected{% endif %}>{{ area }}</option>
+              {% endfor %}
+            </select>
+
+
+            <input type="text" name="address" placeholder="Вулиця і номер будинку *" value="{{ user.customer_steet_and_number if user else '' }}">
+            <input type="number" name="entrance" placeholder="Під’їзд" value="{{ user.customer_entrance if user else '' }}">
+          </div>
+
+          <input type="date" name="delivery_date" id="delivery-date" required>
+          <input type="time" name="delivery_time" id="delivery-time" min="08:00" max="22:00" required>
+
+          <div id="time-error" class="error-banner" style="display: none;"></div>
+
+          <textarea name="comment" placeholder="Коментар (необов’язково)"></textarea>
+
+          <button type="button" class="submit-btn" id="confirm-order-btn">Оформити замовлення</button>
+
+          <div id="confirm-modal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.6); z-index: 9999; justify-content:center; align-items:center;">
+            <div style="background:#fff; padding:2rem; border-radius:12px; max-width:400px; text-align:center;">
+              <p>Ви впевнені, що хочете оформити замовлення?</p>
+              <button type="submit" class="submit-btn">Так, підтвердити</button>
+              <button type="button" id="cancel-submit" class="submit-btn" style="background:#aaa; margin-top:1rem;">Скасувати</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div id="checkout-summary-wrapper">
+        {% include "checkout_summary_block.html" %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  function updateCart(id, action, isCustom = false) {
+    const url = "/cart/update";
+    const payload = {
+      bouquet_id: id,
+      action: action,
+      custom: isCustom.toString()
+    };
+
+    const deliveryType = document.getElementById("delivery-type")?.value || "Самовивіз";
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(payload)
+    }).then(() => {
+      reloadCartBlocks(deliveryType);
+    });
+  }
+
+  function removeFromCart(id, isCustom = false) {
+    const deliveryType = document.getElementById("delivery-type")?.value || "Самовивіз";
+
+    fetch("/cart/remove_item", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify({ bouquet_id: id, is_custom: isCustom })
+    }).then(() => {
+      reloadCartBlocks(deliveryType);
+    });
+  }
+
+  function reloadCartBlocks(deliveryType) {
+    fetch("/cart/cart_items_block")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("cart-items-wrapper").innerHTML = html;
+        setupCartEvents();
+      });
+
+    fetch(`/cart/checkout_summary_block?delivery_type=${encodeURIComponent(deliveryType)}`)
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("checkout-summary-wrapper").innerHTML = html;
+      });
+  }
+
+  function setupCartEvents() {
+    const plusBtns = document.querySelectorAll(".cart-left .qty-btn.plus");
+    const minusBtns = document.querySelectorAll(".cart-left .qty-btn.minus");
+    const removeBtns = document.querySelectorAll(".cart-left .remove-btn");
+
+    plusBtns.forEach(btn => {
+      btn.onclick = () => updateCart(btn.dataset.id, "increase", btn.dataset.custom === "true");
+    });
+
+    minusBtns.forEach(btn => {
+      btn.onclick = () => updateCart(btn.dataset.id, "decrease", btn.dataset.custom === "true");
+    });
+
+    removeBtns.forEach(btn => {
+      btn.onclick = () => removeFromCart(btn.dataset.id, btn.dataset.custom === "true");
+    });
+  }
+
+  setupCartEvents();
+
+  // Показ/приховування адреси
+  const deliveryTypeSelect = document.getElementById("delivery-type");
+  const deliveryDetails = document.getElementById("delivery-details");
+
+  function toggleDeliveryDetails() {
+    deliveryDetails.style.display = deliveryTypeSelect.value === "Курєр" ? "block" : "none";
+  }
+
+  if (deliveryTypeSelect) {
+    toggleDeliveryDetails();
+    deliveryTypeSelect.addEventListener("change", () => {
+      toggleDeliveryDetails();
+      const selectedType = deliveryTypeSelect.value;
+      fetch(`/cart/checkout_summary_block?delivery_type=${encodeURIComponent(selectedType)}`)
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("checkout-summary-wrapper").innerHTML = html;
+        });
+    });
+  }
+});
+// Підтвердження замовлення
+const confirmBtn = document.getElementById("confirm-order-btn");
+const confirmModal = document.getElementById("confirm-modal");
+const cancelSubmitBtn = document.getElementById("cancel-submit");
+const confirmSubmitBtn = document.querySelector("#confirm-modal .submit-btn");
+
+if (confirmBtn && confirmModal && cancelSubmitBtn && confirmSubmitBtn) {
+  confirmBtn.addEventListener("click", () => {
+    confirmModal.style.display = "flex";
+  });
+
+  cancelSubmitBtn.addEventListener("click", () => {
+    confirmModal.style.display = "none";
+  });
+
+  confirmSubmitBtn.addEventListener("click", () => {
+    // Знайти форму і вручну відправити
+    const form = document.querySelector(".checkout-form");
+    if (form) {
+      form.submit();
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const deliveryTypeSelect = document.getElementById("delivery-type");
+  const deliveryDetails = document.getElementById("delivery-details");
+  const timeInput = document.getElementById("delivery-time");
+  const dateInput = document.getElementById("delivery-date");
+  const errorBanner = document.getElementById("time-error");
+  const confirmBtn = document.getElementById("confirm-order-btn");
+  const confirmModal = document.getElementById("confirm-modal");
+  const cancelSubmitBtn = document.getElementById("cancel-submit");
+  const form = document.getElementById("order-form");
+
+  function toggleDeliveryDetails() {
+    deliveryDetails.style.display = deliveryTypeSelect.value === "Курєр" ? "block" : "none";
+  }
+
+  function validateTime() {
+    const selectedTime = timeInput.value;
+    const minTime = "08:00";
+    const maxTime = "22:00";
+    if (selectedTime < minTime || selectedTime > maxTime) {
+      timeInput.value = "";
+      errorBanner.textContent = "Оберіть час доставки з 08:00 до 22:00.";
+      errorBanner.style.display = "block";
+    } else {
+      errorBanner.style.display = "none";
+    }
+  }
+
+  function validateForm() {
+    const requiredFields = form.querySelectorAll("input[required], select[required]");
+    let valid = true;
+    requiredFields.forEach(field => {
+      if (!field.value.trim()) {
+        field.classList.add("input-error");
+        valid = false;
+      } else {
+        field.classList.remove("input-error");
+      }
+    });
+    if (deliveryTypeSelect.value === "Курєр") {
+      const area = form.querySelector("select[name='area']");
+      const address = form.querySelector("input[name='address']");
+      if (!area.value || !address.value.trim()) {
+        area.classList.add("input-error");
+        address.classList.add("input-error");
+        valid = false;
+      } else {
+        area.classList.remove("input-error");
+        address.classList.remove("input-error");
+      }
+    }
+    return valid;
+  }
+
+  toggleDeliveryDetails();
+  deliveryTypeSelect.addEventListener("change", toggleDeliveryDetails);
+  timeInput.addEventListener("change", validateTime);
+
+  const today = new Date().toISOString().split("T")[0];
+  dateInput.setAttribute("min", today);
+
+  confirmBtn.addEventListener("click", () => {
+    if (validateForm()) {
+      confirmModal.style.display = "flex";
+    }
+  });
+
+  cancelSubmitBtn.addEventListener("click", () => {
+    confirmModal.style.display = "none";
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("order-form");
+  const confirmBtn = document.getElementById("confirm-order-btn");
+  const deliveryTypeField = document.getElementById("delivery-type");
+  const deliveryDetails = document.getElementById("delivery-details");
+
+  function toggleDeliveryFields() {
+    deliveryDetails.style.display = deliveryTypeField.value === "Курєр" ? "block" : "none";
+  }
+
+  function validateForm() {
+    let valid = true;
+    const requiredFields = form.querySelectorAll("input[required], select[required]");
+    requiredFields.forEach(field => {
+      const group = field.closest(".form-group");
+      if (!field.value.trim()) {
+        group.classList.add("invalid");
+        group.querySelector(".error-message").style.display = "block";
+        valid = false;
+      } else {
+        group.classList.remove("invalid");
+        group.querySelector(".error-message").style.display = "none";
+      }
+    });
+
+    if (deliveryTypeField.value === "Курєр") {
+      const area = form.querySelector("select[name='area']");
+      const address = form.querySelector("input[name='address']");
+      [area, address].forEach(field => {
+        const group = field.closest(".form-group");
+        if (!field.value.trim()) {
+          group.classList.add("invalid");
+          group.querySelector(".error-message").style.display = "block";
+          valid = false;
+        } else {
+          group.classList.remove("invalid");
+          group.querySelector(".error-message").style.display = "none";
+        }
+      });
+    }
+
+    return valid;
+  }
+
+  deliveryTypeField.addEventListener("change", () => {
+    toggleDeliveryFields();
+  });
+
+  toggleDeliveryFields();
+
+  confirmBtn.addEventListener("click", () => {
+    if (validateForm()) {
+      form.submit();
+    }
+  });
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const timeInput = document.getElementById("delivery-time");
+  const dateInput = document.getElementById("delivery-date");
+  const errorBanner = document.getElementById("time-error");
+
+  // 🔒 Заборонити минулі дати
+  const today = new Date().toISOString().split("T")[0];
+  dateInput.setAttribute("min", today);
+
+  // 🕒 Перевірка часу доставки
+  timeInput.addEventListener("change", function () {
+    const selectedTime = this.value;
+    const minTime = "08:00";
+    const maxTime = "22:00";
+
+    if (selectedTime < minTime || selectedTime > maxTime) {
+      this.value = "";
+      errorBanner.textContent = "Оберіть час доставки з 08:00 до 22:00.";
+      errorBanner.style.display = "block";
+    } else {
+      errorBanner.style.display = "none";
+    }
+  });
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("order-form");
+  const confirmBtn = document.getElementById("confirm-order-btn");
+  const confirmModal = document.getElementById("confirm-modal");
+  const cancelSubmitBtn = document.getElementById("cancel-submit");
+
+  function validateForm() {
+    let valid = true;
+
+    // Очистити попередні помилки
+    form.querySelectorAll(".input-error").forEach(el => el.classList.remove("input-error"));
+
+    // Поля, які завжди обов’язкові
+    const requiredFields = form.querySelectorAll("input[required], select[required]");
+    requiredFields.forEach(field => {
+      if (!field.value.trim()) {
+        field.classList.add("input-error");
+        valid = false;
+      }
+    });
+
+    // Якщо доставка — кур’єр, перевірити додаткові поля
+    const deliveryType = form.querySelector("select[name='delivery_type']").value;
+    if (deliveryType === "Курєр") {
+      const area = form.querySelector("select[name='area']");
+      const address = form.querySelector("input[name='address']");
+      if (!area.value.trim()) {
+        area.classList.add("input-error");
+        valid = false;
+      }
+      if (!address.value.trim()) {
+        address.classList.add("input-error");
+        valid = false;
+      }
+    }
+
+    return valid;
+  }
+
+  // Кнопка "Оформити замовлення"
+  confirmBtn.addEventListener("click", () => {
+    const isValid = validateForm();
+
+    if (isValid) {
+      confirmModal.style.display = "flex"; // показати модальне вікно
+    } else {
+      confirmModal.style.display = "none"; // переконатись, що не з’явилось випадково
+    }
+  });
+
+  // Кнопка "Скасувати"
+  cancelSubmitBtn.addEventListener("click", () => {
+    confirmModal.style.display = "none";
+  });
+});
+
+</script>

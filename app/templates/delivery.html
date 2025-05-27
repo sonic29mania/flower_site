@@ -1,0 +1,259 @@
+
+
+
+
+
+    <style>
+        body {
+  overflow-x: hidden;
+}
+        .delivery-section {
+          padding: 40px;
+        }
+    
+        .delivery-section .container {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+    
+        .page-title {
+          font-size: 32px;
+          text-align: center;
+          margin-bottom: 40px;
+          color: #00312E;
+        }
+    
+        .delivery-flex {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 60px;
+        }
+    
+        .delivery-info {
+          flex: 1 1 600px;
+          text-align: left;
+        }
+    
+        .delivery-images {
+          flex: 0 0 400px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 40px;
+          margin-top: 200;
+        }
+    
+        .delivery-image img {
+          width: 100%;
+          height: auto;
+          border-radius: 10px;
+        }
+    
+        .delivery-image.decorated {
+          position: relative;
+          width: 100%;
+          margin-top: 0px;
+        }
+    
+        .delivery-image.decorated img {
+          width: 100%;
+          height: auto;
+          position: relative;
+          z-index: 3;
+          border-radius: 10px;
+        }
+    
+        .decor-square {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background-color: #00312E;
+          border-radius: 10px;
+        }
+    
+        .decor-square-left {
+          top: 30px;
+          left: -30px;
+          background-color: #00312E;
+          z-index: 1;
+        }
+    
+        .decor-square-right {
+          top: -30px;
+          right: -30px;
+          background-color: #00312E;
+          z-index: 2;
+        }
+        .delivery-image.reverse {
+            position: relative;
+            top: 0px;
+        }
+        .delivery-image.reverse img {
+            transform: scaleX(-1);
+        }
+        .decor {
+            position: absolute; /* БУЛО fixed — тепер absolute */
+            width: 400px; /* або свій розмір */
+            z-index: 0; /* щоб було під контентом, або мінімальним */
+            }
+
+        .decor-left {
+            left: -150;
+            top: 550;
+            display: flex;
+            flex-direction: column;
+            gap: 500px; /* відстань між картинками */
+            transform: rotate(32deg);
+            }
+        .decor-left2 {
+            left: -150;
+            top: 2250;
+            display: flex;
+            flex-direction: column;
+            gap: 500px; /* відстань між картинками */
+           
+            z-index: -1;
+            }
+        .decor-right {
+            right: -150;
+            top: 1400;
+            display: flex;
+            flex-direction: column;
+            gap: 500px;
+            }
+
+        .decor-right img {
+            transform: rotate(210deg); /* ПЕРЕВЕРНЕННЯ decor-right */
+            }
+
+        .decor img {
+            width: 100%;
+            height: auto;
+            }
+    </style>
+    
+    {% extends "base.html" %}
+    
+    {% block title %}Доставка | Flower Tale{% endblock %}
+    
+    {% block content %}
+  
+
+    <section class="delivery-section">
+        <div class="container">
+      
+          <h1 class="page-title">Доставка</h1>
+      
+          <!-- ПЕРША ЧАСТИНА: ФОТО СПРАВА -->
+          <div class="delivery-flex">
+            <div class="delivery-info">
+                <h2>Коли ми приймаємо замовлення на доставку квітів:</h2>
+                <ul>
+                <li>Прийом замовлень на сайті – цілодобово.</li>
+                <li>Прийом замовлень за телефонами – пн-пт з 08:30 до 20:00, сб-нд з 09:00 до 20:00.</li>
+                <li>Прийом замовлень в онлайн чаті, Viber, Telegram, WhatsApp, Facebook, Instagram - пн-пт з 08:30 до 20:00, сб-нд з 09:00 до 20:00.</li>
+                </ul>
+        
+                <h2>Час доставки</h2>
+                <p>Якщо ви оформляєте замовлення з доставкою, його необхідно оформити за 1,5-2 години до часу, коли воно має бути вручене одержувачу.</p>
+                <p>Доставку можна замовити як на власну адресу, так і на адресу людини, якій ви бажаєте зробити подарунок.</p>
+                <p>Доставка по Харкову та Харківській області щодня з 09:00 до 20:00.</p>
+        
+                <h2>Тарифи доставки по Харкову та Харківській області кур'єрською службою Flower Tale</h2>
+                <ul>
+                <li>Доставка при замовленні від 1400 грн. – безкоштовно (за умови доставки по м. Харкову у звичайні інтервали).</li>
+                <li>Доставка при замовленні до 1400 грн. - 200 грн. по м. Харкову.</li>
+                <li>Доставка у передмістя, до 10 км від межі міста – 500 грн. - Доставка оплачується незалежно від суми Вашого замовлення.</li>
+                </ul>
+            </div>
+      
+            <div class="delivery-images">
+              <div class="delivery-image">
+                <img src="{{ url_for('static', filename='images/delivery1.png') }}" alt="Доставка квітів">
+              </div>
+            </div>
+          </div>
+      
+          <!-- ДРУГА ЧАСТИНА: ФОТО ЗЛІВА -->
+          <div class="delivery-flex reverse">
+            <div class="delivery-images">
+              <div class="delivery-image decorated reverse">
+                <div class="decor-square decor-square-left"></div>
+                <div class="decor-square decor-square-right"></div>
+                <img src="{{ url_for('static', filename='images/delivery2.png') }}" alt="Доставка квітів">
+              </div>
+            </div>
+      
+            <div class="delivery-info">
+                <h2>Правила доставки:</h2>
+                <ol>
+                <li><strong>Правило конфіденційності</strong>
+                    <p>При оформленні замовлення ви можете скористатися правом конфіденційності – вказавши про анонімність у коментарях замовлення.</p>
+                    <p>Якщо Ви бажаєте передати одержувачу будь-яку інформацію, Ви маєте можливість вказати її у листівці, прикріпленій до квітів.</p>
+                </li>
+                <li><strong>Доставка у святкові дні</strong>
+                    <p>У святкові дні адміністратор інтернет-магазину телефонує заздалегідь, за один або кілька днів до доставки, для уточнення зручного часу та адреси для отримання подарунка.</p>
+                </li>
+                <li><strong>Доставка без попереднього дзвінка одержувачу</strong>
+                    <p>При оформленні доставки подарунка без попереднього дзвінка, замовник повинен надати інформацію про час та місце доставки, згідно з тимчасовими інтервалами доставки встановленими інтернет-магазином Flower Tale.</p>
+                </li>
+                </ol>
+                <h2>Складнощі, які можуть виникнути під час доставки без попереднього дзвінка:</h2>
+                <ul>
+                <li>Кур'єр приїжджає за вказаною адресою, але ця адреса некоректна.</li>
+                <li>За вказаною адресою одержувач не мешкає.</li>
+                <li>Незручний час доставки.</li>
+                <li>Кур'єру не відчинили двері.</li>
+                </ul>
+                <p>У таких випадках адміністратор інтернет-магазину повідомляє замовнику про цю ситуацію. Якщо замовник не може вирішити все самостійно, він може передати адміністратору інтернет-магазину телефон отримувача для погодження з ним адреси та часу отримання подарунка.</p>
+                <p>Після розмови з одержувачем адміністратор інтернет-магазину зв'язується із замовником та інформує про результати розмови. У разі оформлення повторного виїзду кур'єра замовник оплачує послугу згідно з встановленими тарифами.</p>
+                <p>Якщо протягом 24 годин замовник або одержувач не виходить на зв'язок – замовлення вважається виконаним, компанія не надає часткове або повне повернення суми.</p>
+                <p>Замовник несе повну відповідальність за надану інформацію в інтернет-магазині Flower Tale.</p>
+        
+            </div>
+          </div>
+      
+          <!-- ТРЕТЯ ЧАСТИНА: ФОТО СПРАВА -->
+          <div class="delivery-flex">
+            <div class="delivery-info">
+                <h2>Доставка додому</h2>
+                <p>Замовлення доставляється одержувачу особисто в руки або довіреній особі за погодженням із одержувачем або замовником.</p>
+        
+                <h2>Доставка на місце роботи, до офісного або бізнес-центру</h2>
+                <p>Доставка здійснюється лише до ресепшену.</p>
+                <p>Якщо одержувач не може спуститися до пропускного пункту або відсутній за адресою у визначений час, адміністратор інтернет-магазину погоджує із замовником чи одержувачем можливість передати подарунок через співробітників.</p>
+        
+                <h2>Доставка у готель</h2>
+                <p>Доставка здійснюється лише до ресепшену.</p>
+                <p>Для успішної доставки подарунка, при оформленні замовлення необхідно вказати ім'я, прізвище та номер мобільного телефону для того, щоб ресепшіоніст зміг зв'язатися з одержувачем. Кур'єр інтернет-магазину передає подарунок виключно в руки ресепшіоністу, далі інтернет-магазин Flower Tale не відповідає за терміни передачі подарунка.</p>
+        
+            </div>
+      
+            <div class="delivery-images">
+              <div class="delivery-image decorated">
+                <div class="decor-square decor-square-left"></div>
+                <div class="decor-square decor-square-right"></div>
+                <img src="{{ url_for('static', filename='images/delivery3.png') }}" alt="Замовлення квітів">
+              </div>
+            </div>
+          </div>
+      
+          <!-- Декорації -->
+          <div class="decor decor-left">
+            <img src="{{ url_for('static', filename='images/decor1.png') }}" alt="Декор зліва">
+          </div>
+      
+          <div class="decor decor-right">
+            <img src="{{ url_for('static', filename='images/decor1.png') }}" alt="Декор справа">
+          </div>
+      
+          <div class="decor decor-left2">
+            <img src="{{ url_for('static', filename='images/decor1.png') }}" alt="Декор зліва 2">
+          </div>
+      
+        </div>
+      </section>
+      
+    {% endblock %}

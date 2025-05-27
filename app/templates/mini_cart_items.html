@@ -1,0 +1,43 @@
+<ul>
+  {% for item in cart_items %}
+    {% if item.is_custom %}
+      <li class="mini-cart-item custom">
+        <img src="/static/images/constructor-placeholder.jpg" width="70" height="70">
+        <div class="item-info">
+          <span class="name">{{ item.custom_name or "Індивідуальний букет" }}</span>
+          <p class="desc">
+            {% for f in item.flowers %}
+              {{ f.flower_name }} × {{ f.quantity }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          </p>
+          <div class="quantity-controls">
+            <button class="qty-btn minus" data-id="{{ item.custom_id }}" data-custom="true">−</button>
+            <span class="quantity">{{ item.quantity }}</span>
+            <button class="qty-btn plus" data-id="{{ item.custom_id }}" data-custom="true">+</button>
+          </div>
+          <span class="price">{{ item.total_price * item.quantity }} грн</span>
+        </div>
+        <button class="remove-btn" data-id="{{ item.custom_id }}" data-custom="true">✕</button>
+      </li>
+    {% else %}
+      {% set bouquet = bouquet_map.get(item.bouquet_id) %}
+      {% if bouquet %}
+        <li class="mini-cart-item">
+          <img src="{{ '/static' + bouquet.bouquet_image }}" width="70" height="70">
+          <div class="item-info">
+            <span class="name">{{ bouquet.bouquet_name }}</span>
+            <div class="quantity-controls">
+              <button class="qty-btn minus" data-id="{{ item.bouquet_id }}">−</button>
+              <span class="quantity">{{ item.quantity }}</span>
+              <button class="qty-btn plus" data-id="{{ item.bouquet_id }}">+</button>
+            </div>
+            <span class="price">{{ bouquet.bouquet_price * item.quantity }} грн</span>
+          </div>
+          <button class="remove-btn" data-id="{{ item.bouquet_id }}">✕</button>
+        </li>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</ul>
+
+<p class="mini-cart-total">Разом: {{ total }} грн</p>

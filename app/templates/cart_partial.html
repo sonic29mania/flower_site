@@ -1,0 +1,27 @@
+
+   <div id="checkout-summary-wrapper">
+    <div class="delivery-info-text" id="delivery-info-text">
+      {% if delivery_type == "Самовивіз" %}
+        <p>✅ Обрано <strong>самовивіз</strong> — ви отримаєте <strong>знижку 10%</strong>.</p>
+      {% elif delivery_type == "Курєр" and subtotal < 1500 %}
+        <p>🚚 Обрано <strong>доставку кур’єром</strong>. Додано <strong>150 грн</strong> до замовлення.</p>
+      {% elif delivery_type == "Курєр" and subtotal >= 1500 %}
+        <p>🚚 Доставка <strong>безкоштовна</strong>.</p>
+      {% else %}
+        <p>❗Оберіть спосіб доставки, щоб побачити умови.</p>
+      {% endif %}
+    </div>
+  
+    <div class="checkout-summary" id="checkout-summary">
+      <h2 class="summary-title">Підсумок</h2>
+      <table>
+        {% if discount > 0 %}
+        <tr><td>Сума без знижки</td><td>{{ subtotal }} грн</td></tr>
+        <tr><td>Знижка</td><td>–{{ discount }} грн</td></tr>
+        {% endif %}
+        <tr><td>Доставка</td><td>{{ delivery_fee }} грн{% if delivery_fee == 0 %} (Безкоштовно){% endif %}</td></tr>
+        <tr class="summary-total"><td>Підсумок</td><td>{{ total }} грн</td></tr>
+      </table>
+    </div>
+  </div>
+  

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Flower Tale{% endblock %}</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/mini_cart.css') }}" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/fonts/icomoon.css') }}" />
+  </head>
+  <body>
+    <header id="header">
+      <div class="container">
+        <div class="logo">
+          <a href="{{ url_for('main.home') }}">
+            <img
+              src="{{ url_for('static', filename='images/logo.png') }}"
+              alt="Flower Tale" />
+          </a>
+        </div>
+        <div id="nav">
+          <ul class="navigation">
+            <li class="dropdown">
+              <a href="{{ url_for('category.category') }}">Квіти та Букети ▾</a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="{{ url_for('category.category') }}">Готові букети</a>
+                </li>
+                <li>
+                  <a href="{{ url_for('constructor.constructor') }}"
+                    >Зібрати свій букет 🌸</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li><a href="{{ url_for('delivery.delivery') }}">Доставка</a></li>
+            <li><a href="{{ url_for('sales.sales') }}">Акції</a></li>
+            <li><a href="{{ url_for('contacts.contacts') }}">Контакти</a></li>
+          </ul>
+          <ul class="shop-nav">
+            <li class="cart-dropdown-wrapper">
+              <a href="{{ url_for('cart.cart_page') }}" id="cart-toggle">
+                <span class="icon-shopping-bag"></span>
+              </a>
+              <div
+                id="mini-cart-container"
+                class="cart-dropdown cart-wrapper"></div>
+            </li>
+            <li>
+              {% if session.user_id %}
+              <a href="{{ url_for('profile.profile') }}"
+                ><span class="icon-user"></span
+              ></a>
+              {% else %}
+              <a href="{{ url_for('auth.login') }}"
+                ><span class="icon-user"></span
+              ></a>
+              {% endif %}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">{% block content %}{% endblock %}</main>
+
+    <footer id="footer">
+      <div class="container">
+        <div class="col-left">
+          <div class="logo">
+            <a href="/"
+              ><img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="Flower Tale"
+            /></a>
+          </div>
+          <ul class="social-links">
+            <li>
+              <a href="#"><span class="icon-telegram"></span></a>
+            </li>
+            <li>
+              <a href="#"><span class="icon-pinterest-square"></span></a>
+            </li>
+            <li>
+              <a href="#"><span class="icon-instagram"></span></a>
+            </li>
+            <li>
+              <a href="#"><span class="icon-facebook"></span></a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-right">
+          <ul class="navigation">
+            <li><a href="#">Квіти та Букети</a></li>
+            <li><a href="#">Доставка</a></li>
+            <li><a href="#">Магазини</a></li>
+            <li><a href="#">Контакти</a></li>
+            <li>
+              <a href="#">Часто шукають</a>
+              <ul>
+                <li><a href="#">Букети</a></li>
+                <li><a href="#">Квіти поштучно</a></li>
+                <li><a href="#">Подарунки</a></li>
+                <li><a href="#">Акції</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <p class="copyright">© 2025 Flower Tale</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const miniCartContainer = document.getElementById("mini-cart-container");
+    const cartToggle = document.getElementById("cart-toggle");
+
+    // Завантажити міні-кошик
+    function loadMiniCart() {
+      fetch("/cart/mini")
+        .then((res) => res.text())
+        .then((html) => {
+          miniCartContainer.innerHTML = html;
+          miniCartContainer.classList.add("visible");
+          setupMiniCartEvents(); // ⬅️ Після вставки — підв'язуємо кнопки
+        });
+    }
+
+    // Оновити кількість
+    function updateCart(id, action, isCustom = false) {
+      const url = "/cart/update";
+      const payload = isCustom
+        ? { custom_id: id, action }
+        : { bouquet_id: id, action };
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: JSON.stringify(payload),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const miniCartItems = document.getElementById("mini-cart-items");
+          if (data.mini_cart_html && miniCartItems) {
+            miniCartItems.innerHTML = data.mini_cart_html;
+            setupMiniCartEvents(); // знову підв'язуємо кнопки
+          }
+        });
+    }
+
+    // Видалити товар з міні-кошика
+    function removeFromMiniCart(id) {
+      fetch(`/cart/mini_cart/remove/${id}`, {
+        method: "POST",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      })
+        .then((res) => res.text())
+        .then((html) => {
+          const miniCartItems = document.getElementById("mini-cart-items");
+          if (miniCartItems) {
+            miniCartItems.innerHTML = html;
+            setupMiniCartEvents(); // підв'язуємо заново
+          }
+        });
+    }
+
+    // Підв'язування подій після оновлення DOM
+    function setupMiniCartEvents() {
+      const plusBtns = document.querySelectorAll(
+        "#mini-cart-container .qty-btn.plus"
+      );
+      const minusBtns = document.querySelectorAll(
+        "#mini-cart-container .qty-btn.minus"
+      );
+      const removeBtns = document.querySelectorAll(
+        "#mini-cart-container .remove-btn"
+      );
+
+      plusBtns.forEach((btn) => {
+        btn.onclick = () => {
+          const id = btn.dataset.id;
+          const isCustom = btn.dataset.custom === "true";
+          updateCart(id, "increase", isCustom);
+        };
+      });
+
+      minusBtns.forEach((btn) => {
+        btn.onclick = () => {
+          const id = btn.dataset.id;
+          const isCustom = btn.dataset.custom === "true";
+          updateCart(id, "decrease", isCustom);
+        };
+      });
+
+      removeBtns.forEach((btn) => {
+        btn.onclick = () => {
+          const id = btn.dataset.id;
+          removeFromMiniCart(id);
+        };
+      });
+    }
+
+    // Відкрити міні-кошик
+    if (cartToggle) {
+      cartToggle.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        loadMiniCart();
+      });
+    }
+
+    // Закрити при кліку поза кошиком
+    document.addEventListener("click", (e) => {
+      if (
+        !e.target.closest(".cart-wrapper") &&
+        !e.target.closest("#cart-toggle")
+      ) {
+        miniCartContainer.classList.remove("visible");
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Меню */
+  li.dropdown {
+    position: relative;
+  }
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    background: #2e624d; /* 🔧 темно-синій або графітовий */
+    color: white;
+    box-shadow: 0 2px 10px rgba(4, 74, 31, 0.15);
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 0;
+    z-index: 100;
+    border-radius: 8px;
+    min-width: 280px;
+  }
+
+  .dropdown-menu li a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: white;
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+
+  .dropdown-menu li a:hover {
+    background-color: #1a252f;
+  }
+
+  li.dropdown:hover .dropdown-menu {
+    display: block;
+  }
+
+  .cart-dropdown-wrapper {
+    position: relative;
+  }
+
+  .cart-dropdown {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    width: 420px; /* було ~ 140px, стало в 3 рази більше */
+    max-height: 600px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: none;
+    padding: 20px;
+  }
+
+  .cart-dropdown.visible {
+    display: block;
+  }
+
+  .cart-dropdown .cart-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .cart-dropdown .cart-item img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .cart-dropdown .cart-summary {
+    margin-top: 15px;
+    text-align: right;
+    font-weight: bold;
+  }
+
+  .btn-view-cart {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #2e624d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 15px;
+    text-decoration: none;
+  }
+</style>

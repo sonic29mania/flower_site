@@ -1,0 +1,19 @@
+{% for bouquet in bouquets %}
+<div class="bouquet-clean-card reveal">
+    <div class="bouquet-img-wrapper">
+        <a href="{{ url_for('product.product', bouquet_id=bouquet.bouquet_id) }}">
+            <img src="{{ url_for('static', filename=bouquet.bouquet_image.lstrip('/')) }}" alt="{{ bouquet.bouquet_name }}">
+        </a>
+        <button class="fav-btn">♡</button>
+    </div>
+    <h3>
+        <a href="{{ url_for('product.product', bouquet_id=bouquet.bouquet_id) }}">
+            {{ bouquet.bouquet_name }}
+        </a>
+    </h3>
+    <p>{{ bouquet.bouquet_price }} грн</p>
+    <button class="btn-to-cart">
+         В кошик
+    </button>
+</div>
+{% endfor %}

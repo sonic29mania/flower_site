@@ -1,0 +1,632 @@
+<style>
+  .availability {
+    font-size: 14px;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+
+  .accordion {
+    border-top: 1px solid #ccc;
+  }
+
+  .accordion-item {
+    border-bottom: 1px solid #ccc;
+  }
+
+  .accordion-header {
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    width: 100%;
+    padding: 0.75rem 0;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .accordion-header::after {
+    content: "▲";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    transition: transform 0.3s;
+  }
+
+  .accordion-header.collapsed::after {
+    content: "▼";
+  }
+
+  .accordion-body {
+    display: none;
+    padding: 0.5rem 0;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .accordion-body.active {
+    display: block;
+  }
+
+  .similar-section {
+    margin-top: 60px;
+  }
+
+  .similar-section .title-section {
+    font-size: 22px;
+    margin-bottom: 1.5rem;
+  }
+
+  .posts-holder {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+
+  .box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 1rem;
+    text-align: center;
+    width: 100%;
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+  }
+
+  .box:hover {
+    transform: translateY(-5px);
+  }
+
+  .box img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .box .title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+
+  .box .price {
+    font-size: 16px;
+    font-weight: 500;
+    color: #000;
+    margin-bottom: 1rem;
+  }
+
+  .box .btn-shop {
+    margin-top: auto;
+    background: #2c3e50;
+    color: white;
+    padding: 0.5rem 1.2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .box .btn-shop:hover {
+    background: #1a1a1a;
+  }
+
+  .product-gallery .title {
+    font-size: 20px;
+    margin-top: 1rem;
+    color: #2c3e50;
+  }
+
+  .product-page {
+    padding: 100px 0 40px;
+  }
+
+  .container-narrow {
+    max-width: 1000px;
+    margin: 100px auto 0;
+    padding: 0 20px;
+  }
+
+  .similar-section {
+    max-width: 1000px;
+    margin: 60px auto 0;
+    padding: 0 20px;
+  }
+
+  .similar-section .title-section {
+    font-size: 22px;
+    margin-bottom: 1.5rem;
+    padding-left: 200; /* або 10px, якщо треба невеликий зсув */
+  }
+
+  /* НОВА ЧАСТИНА */
+
+  .posts-holder.bouquet-slider {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 2.5rem;
+    justify-content: center;
+    max-width: 1300px;
+    margin: 4rem auto 2rem;
+    padding: 1rem;
+  }
+
+  .bouquet-clean-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 1.8rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .bouquet-clean-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.1);
+  }
+
+  .bouquet-img-wrapper {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+
+  .bouquet-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 20px;
+  }
+
+  .bouquet-clean-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 16px;
+    color: #1a1a1a;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .bouquet-clean-card p {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2e624d;
+    margin-top: 6px;
+  }
+
+  .fav-btn {
+    width: 40;
+    height: 40;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    padding: 6px 8px;
+    cursor: pointer;
+    font-size: 24px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background 0.2s ease;
+  }
+
+  .fav-btn:hover {
+    background: #f5f5f5;
+  }
+
+  .bouquet-clean-card h3 a:hover {
+    text-decoration: underline;
+  }
+  .bouquet-clean-card a {
+    text-decoration: none;
+    color: inherit;
+    outline: none;
+  }
+
+  .bouquet-clean-card a:focus,
+  .bouquet-clean-card a:active {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .bouquet-clean-card h3 a:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .bouquet-clean-card a {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .btn-to-cart {
+    margin-top: 10px;
+    background-color: #2e624d;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  .btn-to-cart:hover {
+    background-color: #244f3f;
+  }
+  .elite-product-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    max-width: 1300px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 30px;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.08);
+    font-family: "Montserrat", sans-serif;
+  }
+
+  .left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .image-wrapper {
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 24px;
+  }
+
+  .left-col h1 {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 700;
+    margin-top: 1rem;
+    color: #1a1a1a;
+  }
+
+  .left-col .price {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2e624d;
+  }
+
+  .left-col .availability {
+    font-size: 16px;
+    color: #555;
+    text-align: center;
+  }
+
+  .right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: flex-start;
+  }
+
+  .accordion-header {
+    font-size: 18px;
+    font-weight: 600;
+    padding: 1rem 0;
+    color: #2c3e50;
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+    text-align: left;
+    width: 100%;
+  }
+
+  .accordion-header::after {
+    content: "▼";
+    position: absolute;
+    right: 0;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+  }
+
+  .accordion-header.collapsed::after {
+    content: "►";
+  }
+
+  .accordion-body {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+    padding: 0.8rem 0;
+    display: none;
+  }
+
+  .accordion-body.active {
+    display: block;
+  }
+
+  .btn-to-cart {
+    background-color: #2e624d;
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 17px;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  .btn-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .btn-to-cart:hover {
+    background-color: #244f3f;
+    transform: translateY(-2px);
+  }
+  .product-page h2 {
+    margin-left: 650px;
+    font-size: 32px;
+  }
+  .elite-product-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .decor {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    animation: fadeInDecor 1s ease-out forwards;
+  }
+
+  .decor-left {
+    top: 80px;
+    left: 250px;
+    width: auto;
+    transform: rotate(-5deg);
+  }
+
+  .decor-right {
+    top: 1250;
+    bottom: -40px;
+    right: 340px;
+    width: auto;
+    transform: rotate(8deg);
+  }
+
+  @keyframes fadeInDecor {
+    from {
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const headers = document.querySelectorAll(".accordion-header");
+
+    headers.forEach((header) => {
+      header.addEventListener("click", function () {
+        const body = this.nextElementSibling;
+        const isActive = body.classList.contains("active");
+
+        document
+          .querySelectorAll(".accordion-body")
+          .forEach((el) => el.classList.remove("active"));
+        document
+          .querySelectorAll(".accordion-header")
+          .forEach((el) => el.classList.add("collapsed"));
+
+        if (!isActive) {
+          body.classList.add("active");
+          this.classList.remove("collapsed");
+        }
+      });
+
+      header.classList.add("collapsed");
+    });
+  });
+  document.addEventListener("click", function (event) {
+    const button = event.target.closest(".btn-to-cart");
+    if (!button) return;
+
+    event.preventDefault();
+
+    const url = button.dataset.url;
+    if (!url) return;
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    })
+      .then(() => fetch("/cart/mini"))
+      .then((res) => res.text())
+      .then((html) => {
+        const popup = document.querySelector("#mini-cart-container");
+        if (popup) {
+          popup.innerHTML = html;
+          popup.classList.add("show");
+          setTimeout(() => popup.classList.remove("show"), 3000);
+        }
+      });
+  });
+  document.querySelectorAll(".btn-to-cart").forEach((button) => {
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const bouquetId = parseInt(this.dataset.url.split("=").pop());
+
+      fetch("/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: JSON.stringify({ bouquet_id: parseInt(url.split("=").pop()) }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Додано до кошика ✅");
+
+            fetch("/cart/mini")
+              .then((r) => r.text())
+              .then((html) => {
+                const popup = document.getElementById("mini-cart");
+                if (popup) popup.innerHTML = html;
+              });
+          } else {
+            alert("❌ Не вдалося додати");
+          }
+        });
+    });
+  });
+</script>
+{% extends "base.html" %} {% block content %}
+<section class="product-page">
+  <div class="decor decor-left">
+    <img
+      src="{{ url_for('static', filename='images/decor1.png') }}"
+      alt="decor" />
+  </div>
+  <div class="decor decor-right">
+    <img
+      src="{{ url_for('static', filename='images/decor2.png') }}"
+      alt="decor" />
+  </div>
+
+  <section class="elite-product-card">
+    <div class="left-col">
+      <div class="image-wrapper">
+        <img
+          src="{{ url_for('static', filename=bouquet['bouquet_image'].lstrip('/')) }}"
+          alt="{{ bouquet['bouquet_name'] }}" />
+      </div>
+      <h1>{{ bouquet['bouquet_name'] }}</h1>
+      <p class="price">{{ bouquet['bouquet_price'] }} грн</p>
+      <p class="availability">{{ bouquet['bouquet_obviousness'] }}</p>
+    </div>
+
+    <div class="right-col">
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header">Опис</button>
+          <div class="accordion-body">
+            <p>
+              Букет, в який вкладено багато кохання. Флористи студії
+              <strong>Flower Tale</strong> зробили його із найсвіжіших кольорів.
+            </p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">Склад</button>
+          <div class="accordion-body">
+            <p>{{ bouquet["bouquet_content"] or "Інформація відсутня" }}</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">Розмір</button>
+          <div class="accordion-body">
+            <p>{{ bouquet["size_name"] or "Не вказано" }}</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">Тип</button>
+          <div class="accordion-body">
+            <p>{{ bouquet["type_b_name"] or "—" }}</p>
+          </div>
+        </div>
+      </div>
+
+      <form
+        method="POST"
+        action="{{ url_for('cart.add_to_cart', bouquet_id=bouquet['bouquet_id']) }}">
+        <div class="btn-wrapper">
+          <button
+            type="button"
+            class="btn-to-cart"
+            data-url="{{ url_for('cart.add_to_cart', bouquet_id=bouquet['bouquet_id']) }}">
+            <i class="icon icon-shop"></i> В кошик
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <h2>Схожі букети</h2>
+  <div class="posts-holder bouquet-slider">
+    {% for item in similar[:3] %}
+    <div class="bouquet-clean-card">
+      <div class="bouquet-img-wrapper">
+        <a
+          href="{{ url_for('product.product', bouquet_id=item['bouquet_id']) }}">
+          <img
+            src="{{ url_for('static', filename=item['bouquet_image'].lstrip('/')) }}"
+            alt="{{ item['bouquet_name'] }}" />
+        </a>
+        <button class="fav-btn">♡</button>
+      </div>
+      <h3>
+        <a
+          href="{{ url_for('product.product', bouquet_id=item['bouquet_id']) }}">
+          {{ item['bouquet_name'] }}
+        </a>
+      </h3>
+      <p>{{ item['bouquet_price'] }} грн</p>
+      <form
+        method="POST"
+        action="{{ url_for('cart.add_to_cart', bouquet_id=item['bouquet_id']) }}">
+        <div class="btn-wrapper">
+          <button
+            type="button"
+            class="btn-to-cart"
+            data-id="{{ item['bouquet_id'] }}">
+            <i class="icon icon-shop"></i> В кошик
+          </button>
+        </div>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
