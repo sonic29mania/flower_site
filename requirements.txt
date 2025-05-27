@@ -1,3 +1,10 @@
 Flask
 gunicorn
 flask_migrate
+flask_sqlalchemy
+mysql-connector-python
+python-dotenv
+flask_login
+flask_mail
+flask_wtf
+email_validator
